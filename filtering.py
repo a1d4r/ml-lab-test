@@ -2,21 +2,24 @@ import torch
 import os
 from PIL import Image
 from torchvision import transforms
+import shutil
 
 
 INPUT_DIR = './input'
 OUTPUT_DIR = './output'
 MODEL_PATH = 'model.pt'
+THRESHOLD = 0.1
 
 # Load script
 loaded_script = torch.jit.load(MODEL_PATH)
 
 # Load images
+image_names = []
 images = []
 for file in os.listdir(INPUT_DIR):
     if file.endswith('.png'):
-
-        images.append(Image.open(os.path.join(INPUT_DIR, file)))
+        image_names.append(file)
+        images.append((file, Image.open(os.path.join(INPUT_DIR, file))))
 
 # Define transforms
 transform_RGB = transforms.Compose([
@@ -43,9 +46,16 @@ def transform(image):
 
 
 # Apply transforms
-tensor = torch.cat([transform(image).unsqueeze(0) for image in images], dim=0)
+tensor = torch.cat([transform(image).unsqueeze(0) for _, image in images], dim=0)
 
 # Run loaded script
 result = loaded_script(tensor)
-print(result)
-print(result[0][0].item())
+
+# Filter images
+filtered_images = [(file, image)
+                   for tensor, (file, image) in zip(result, images)
+                   if tensor[0].item() < THRESHOLD]
+
+# Save filtered images
+for file, _ in filtered_images:
+    shutil.copy2(os.path.join(INPUT_DIR, file), OUTPUT_DIR)
