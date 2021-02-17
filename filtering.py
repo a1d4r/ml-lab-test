@@ -7,18 +7,16 @@ import shutil
 
 INPUT_DIR = './input'
 OUTPUT_DIR = './output'
-MODEL_PATH = 'model.pt'
+MODEL_PATH = 'models/model.pt'
 THRESHOLD = 0.1
 
 # Load script
 loaded_script = torch.jit.load(MODEL_PATH)
 
 # Load images
-image_names = []
 images = []
 for file in os.listdir(INPUT_DIR):
     if file.endswith('.png'):
-        image_names.append(file)
         images.append((file, Image.open(os.path.join(INPUT_DIR, file))))
 
 # Define transforms
