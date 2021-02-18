@@ -1,9 +1,7 @@
-/models/model.pt
-/task.pdf
-/input_example/
-/output_example/
-/data/input/
-/output/
+*.pt
+*.png
+*.pdf
+logs/
 
 # Editors
 .vscode/
