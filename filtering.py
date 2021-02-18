@@ -5,9 +5,9 @@ from torchvision import transforms
 import shutil
 
 
-INPUT_DIR = './input'
-OUTPUT_DIR = './output'
-MODEL_PATH = 'models/model.pt'
+INPUT_DIR = './data/input'
+OUTPUT_DIR = './data/output'
+MODEL_PATH = './models/model.pt'
 THRESHOLD = 0.1
 
 # Load script
